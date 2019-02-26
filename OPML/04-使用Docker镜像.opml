@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title></title>
+    <dateModified></dateModified>
+    <ownerName></ownerName>
+  </head>
+  <body>
+<outline text="一、获取镜像" _note="以 [Docker Hub](https://hub.docker.com/explore/) 为例.&#10;&#10;    docker pull [选项] [Docker Registry 地址[:端口号]/]仓库名[:标签]&#10;    docker pull [OPTIONS] NAME[:TAG|@DIGEST]&#10;&#10;    docker pull ubuntu:18.04&#10;    # 没有给定Registry，则从Docker Hub中拉取">
+</outline>
+<outline text="二、启动并运行镜像" _note="    # 启动里面的 bash 并且进行交互式操作&#10;    docker run -it --rm ubuntu:18.04 bash&#10;    # -i交互式操作,-t终端&#10;    # --rm 容器退出后随之将其删除&#10;    # bash 是命令&#10;&#10;    # 用 nginx 镜像启动一个容器，命名为 webserver,映射 80端口&#10;    docker run --name webserver -d -p 80:80 nginx&#10;    # 进入容器进行修改&#10;    docker exec -it webserver bash&#10;    # 查看改动&#10;    docker diff webserver&#10;    # 将改动的容器保存为镜像&#10;    docker commit \&#10;      --author &quot;Tao Wang &lt;twang2218@gmail.com&gt;&quot; \&#10;      --message &quot;修改了默认网页&quot; \&#10;      webserver \&#10;      nginx:v2">
+  <outline text="慎用 docker commit" _note="使用 docker commit 意味着所有对镜像的操作都是黑箱操作，生成的镜&#10;像也被称为黑箱镜像，换句话说，就是除了制作镜像的人知道执行过什么命令、怎么生成的镜像，别人根本无从得知。">
+  </outline>
+</outline>
+<outline text="三、列出镜像">
+  <outline text="虚悬镜像" _note="    # 显示 dangling image&#10;    docker image ls -f dangling=true&#10;    # 删除 dangling image&#10;    docker image prune&#10;&#10;新旧镜像同名，旧镜像名称被取消，从而出现仓库名、标签均为&#10;的镜像。这类无标签镜像也被称为 虚悬镜像(dangling image)&#10;&#10;    # 只显示顶层镜像&#10;    docker image ls&#10;&#10;    # 根据仓库名列出镜像&#10;    docker image ls ubuntu&#10;&#10;    # 指定仓库名和标签&#10;    docker image ls ubuntu:18.04&#10;&#10;    # 显示包括中间层镜像在内的所有镜像&#10;    docker image ls -a&#10;    # 中间层的dangling image不能删&#10;&#10;    # 过滤器参数 --filter (since before)&#10;    # mongo:3.2 之后建立的镜像&#10;    docker image ls -f since=mongo:3.2&#10;    # LABEL过滤&#10;    docker image ls -f label=com.example.version=0.1&#10;&#10;**以特定格式显示**&#10;&#10;    # 只列出ID&#10;    docker image ls -q&#10;&#10;    # 镜像ID和仓库名&#10;    docker image ls --format &quot;{{.ID}}: {{.Repository}}&quot;&#10;&#10;    docker image ls --format &quot;table {{.ID}}\t{{.Repository}}\t{{.T&#10;    ag}}&quot;">
+  </outline>
+</outline>
+<outline text="四、删除镜像" _note="    docker image rm [选项] &lt;镜像1&gt; [&lt;镜像2&gt; ...]&#10;    # &lt;镜像&gt; 可以是 镜像短 ID 、 镜像长 ID 、 镜像名 或者 镜像摘要&#10;&#10;Untagged:&#10;一个镜像可以对应多个标签,当我们删除了所指定的标签后，可能还有别的标签指向了这个镜像，如果是这种情况，那么&#10;Delete行为就不会发生。&#10;&#10;    docker image rm $(docker image ls -q redis)&#10;    docker image rm $(docker image ls -q -f before=mongo:3.2)">
+</outline>
+<outline text="五、Dockerfile" _note="使用Dockerfile定制镜像&#10;&#10;    FROM nginx&#10;    RUN echo '&lt;h1&gt;Hello, Docker!&lt;/h1&gt;' &gt; /usr/share/nginx/html/index.html&#10;&#10;    #表示从空白镜像构建&#10;    FROM scratch&#10;&#10;一条 RUN 指令就是一次 docker commit，没有意义，所以一般采取这种方式：&#10;![](http://image.creat.kim/picgo/20190221120812.png &quot;fig:&quot;)&#10;命令的最后添加了**清理工作的命令**，删除了为了编译构建所需要的软件，清理了所有下载、展开的文件，并且还清理了&#10;apt 缓存文件。">
+  <outline text="构建镜像" _note="    docker build -t nginx:v3 . &#10;    # 这个点是指定上下文路径，所以一般将Dockerfile 置于一个空目录下&#10;    # 利用相对路径进行构建">
+  </outline>
+</outline>
+  </body>
+</opml>
